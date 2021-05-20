@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️妍妍</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2536416_7hsgvqmgqfl.css">
+    <style>
+        body{
+            margin: 0;
+        }
+        img,audio{
+            display: none;
+        }
+        .cover-box{
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,.7);
+        }
+        .iconfont{
+            position: absolute;
+            font-size: 50px;
+            color: #fff;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+        }
+        .touched-txt{
+            text-align: center;
+            margin-top: 40px;
+            color: #ff64c7;
+        }
+    </style>
+</head>
+<body>
+    <img src="" alt="">
+    <canvas></canvas>
+    <h2 class="touched-txt">
+    </h2>
+    <audio controls="controls" autoplay="autoplay">
+        <source src="./must-love-u.mp3" type="audio/mpeg" />
+    </audio>
+    <div class="cover-box">
+        <span class="iconfont iconai23"></span>
+    </div>
+    <script>
+        var gap = 50;
+        document.querySelector('.iconfont').onclick = function(){
+            document.querySelector('.cover-box').style.display = 'none';
+            //播放音频和绘画
+            document.querySelector('audio').play()
+            initImageData("./together_small.png",function(img){
+                var timer = setInterval(()=>{
+                    if(gap-- <= 1){
+                        clearInterval(timer);
+                        //显示文字
+                        var arr = "老婆，这段时间辛苦了，我永远爱你！".split("");
+                        
+                        var typeTimer = setInterval(()=>{
+                            var letter = arr.splice(0,1);
+                            if(letter){
+                                document.querySelector('.touched-txt').innerHTML += letter;
+                            }else{
+                                clearInterval(typeTimer)
+                            }
+                        },400)
+                        return;
+                    }
+                    renderCanvas(img)
+                },400)
+            })
+        }
+
+        function initImageData(imgUrl,cb){
+            let img = document.querySelector('img');
+            img.onload = function(){
+                cb && cb(img);
+            }
+            img.src = imgUrl;
+        }
+        function renderCanvas(img){
+            var canvas = document.querySelector('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            var ctx = canvas.getContext('2d');
+            
+            ctx.drawImage(img,0,0);
+
+            
+            var imageData = ctx.getImageData(0,0,img.naturalWidth,img.naturalHeight).data;
+            
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0,0,img.naturalWidth,img.naturalHeight);
+            for (var h = 0; h < img.naturalHeight; h+=gap) {
+                for(var w = 0; w < img.naturalWidth; w+=gap){
+                    var position = (img.naturalWidth * h + w) * 4;
+                    var r = imageData[position];
+                    var g = imageData[position + 1];
+                    var b = imageData[position + 2];
+                    if(r+g+b==0){
+                        ctx.fillStyle = "#fff";
+                        ctx.fillRect(w,h,4,4);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
