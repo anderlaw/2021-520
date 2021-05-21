@@ -102,37 +102,35 @@
             img.src = imgURL
         }
         
-        
-        document.querySelector('.iconfont').onclick = function(){
-            //隐藏遮罩
-            document.querySelector('.cover-box').style.display = 'none';
-
-            //播放音频和绘画
-            document.querySelector('audio').play()
-            cropImageSizeFitDevice(imgURL,function(base64){
+        cropImageSizeFitDevice(imgURL,function(base64){
+            document.querySelector('.iconfont').onclick = function(){
+                //隐藏遮罩
+                document.querySelector('.cover-box').style.display = 'none';
+                //播放音频和绘画
+                document.querySelector('audio').play()
                 initImageData(base64,function(img){
-                var timer = setInterval(()=>{
-                    if(gap-- <= 1){
-                        clearInterval(timer);
-                        //显示文字
-                        var arr = "老婆辛苦了，我永远爱你！".split("");
-                        
-                        var typeTimer = setInterval(()=>{
-                            var letter = arr.splice(0,1)[0];
-                            if(letter){
-                                document.querySelector('.touched-txt').innerHTML += letter;
-                            }else{
-                                clearInterval(typeTimer)
-                            }
-                        },400)
-                        return;
-                    }
-                    renderCanvas(img)
-                },400)
-            })
-            })
-        }
-
+                    var timer = setInterval(()=>{
+                        if(gap-- <= 1){
+                            clearInterval(timer);
+                            //显示文字
+                            var arr = "老婆辛苦了，我永远爱你！".split("");
+                            
+                            var typeTimer = setInterval(()=>{
+                                var letter = arr.splice(0,1)[0];
+                                if(letter){
+                                    document.querySelector('.touched-txt').innerHTML += letter;
+                                }else{
+                                    clearInterval(typeTimer)
+                                }
+                            },400)
+                            return;
+                        }
+                        renderCanvas(img)
+                    },400)
+                })
+            }
+        })
+        
         function initImageData(base64,cb){
             let img = document.querySelector('img');
             img.onload = function(){
